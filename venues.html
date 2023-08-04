@@ -17,7 +17,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&family=Open+Sans:wght@300;400;500;600;700;800&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
-
+    <link rel="stylesheet" href="./styles/footer.css">
 </head>
 <body>
     
@@ -115,51 +115,6 @@
     </div>
 
     <div id="footer" >
-        <div id="infooter">
-            <div id="div1">
-                <div id="weblogo">
-                    <a href="index.html"><img src="https://playo-website.gumlet.net/logo/playo-logo-footer-website.png?auto=format,compress&h=100" alt="logo" width="100%" height="100%"></a>
-                </div>
-                <div id="playstore">
-                    <a href="https://play.google.com/store/apps/details?id=com.techmash.playo">
-                        <img src="https://playo-website.gumlet.net/icons/download-android.png?auto=format,compress " >
-                    </a>
-                    <a href="https://apps.apple.com/us/app/playo-local-sports-community/id1018786950?ls=1">
-                        <img src="https://playo-website.gumlet.net/icons/download-ios.png?auto=format,compress" >
-                    </a>
-                </div>
-                <div id="copyright">
-                    <p>©2022 TechMash Solutions Private Limited.<span> All Rights Reserved.</span></p>
-                </div>
-                <div id="loweritems">
-                    <a href="faq.html"><p>FAQs</p></a>
-                    <a href=""><p>Privacy POlicy</p></a>
-                    <a href=""><p>Terms Of Service</p></a>
-                    <a href=""><p>Cancellation & Refund Policy</p></a>
-                    <a href=""><p>Careers</p></a>
-                    <a href=""><p id="hiring">We're Hiring!</p></a>
-                </div>
-            </div>
-            <div id="div2">
-                <a href="about.html"><p>About Us</p></a>
-                <a href="partner.html"><p>Partner With Us</p></a>
-                <a href="brandact.html"><p>Brand Activations</p></a>
-                <a href="corporate.html"><p>Corporate Offerings</p></a>
-                <a href="contact.html"><p>contact Us</p></a>
-            </div>
-            <div id="div3">
-                <a href="venues.html"><p>Book Venues</p></a>
-                <a href="activities.html"><p>Activities</p></a>
-                <a href="blog.html"><p>Blog</p></a>
-                <a href="faq.html"><p>FAQ's</p></a>
-            </div>
-            <div id="div4">
-                <a href="https://www.facebook.com/PlayoApp/"><p>Facebook</p></a>
-                <a href="https://twitter.com/playoApp"><p>Twitter</p></a>
-                <a href="https://www.instagram.com/playoapp/"><p>Instagram</p></a>
-                <a href="https://www.linkedin.com/company/playo"><p>LinkdIn</p></a>
-            </div>
-        </div>
     </div>
 
 
@@ -176,9 +131,116 @@
 </body>
 </html>
 <!-- Link Script tag -->
-<script src="./scripts/venues.js" >
+<script type="module">
+    import footer from "./components/footer.js"
 
+    let container = document.querySelector("#footer");
+    container.innerHTML = footer();
     
+document.querySelector("#logo").addEventListener("click", ()=>{
+    window.location.href = "index.html";
+})
+
+
+// navbar popup functionality
+document.querySelector("#giveOTP").style.visibility = "hidden";
+
+const open = document.getElementById("nav2div");
+const modal_container = document.getElementById("modal_container");
+const close = document.getElementById("close");
+
+open.addEventListener("click", ()=>{
+    modal_container.classList.add("show")
+});
+
+close.addEventListener("click", ()=>{
+    modal_container.classList.remove("show")
+});
+
+
+
+
+//If user is logged in 
+login()
+
+function login(){
+    console.log("test")
+    let loginStatus = localStorage.getItem("login")
+    console.log(typeof(loginStatus))
+    if(loginStatus === "true"){
+        let ph = localStorage.getItem("mobileNumber");
+        console.log(ph)
+        document.querySelector("#myBtn").textContent = ph;
+        open.addEventListener("click", ()=>{
+            modal_container.classList.remove("show")
+            window.location.href = "login_profile.html";
+        })
+    
+    }
+    else{
+        return false;
+    }
+
+}
+
+
+
+//When user add mobile number to it
+document.querySelector("#sendOTP").addEventListener("click", ()=>{
+    let mobNo = document.querySelector("#input").value;
+    if(mobNo.length != 10){
+        alert("Please Give correct Mobile Number");
+    }
+    else{
+        localStorage.setItem("mobileNumber", mobNo);
+        // modal_container.style.visibility = "hidden";
+        // document.querySelector(".loginp")
+        document.querySelector("#entermobile").textContent = `We have sent an OTP to ${mobNo}`;
+        document.querySelector("#rem1").style.visibility = "hidden";
+        document.querySelector("#rem2").style.visibility = "hidden";
+        document.querySelector("#countryDrop").style.visibility = "hidden";
+        document.querySelector("#input").value = null;
+        document.querySelector("#input").placeholder = "Enter OTP"
+        document.querySelector("input").style.textAlign = "center";
+        document.querySelector("#sendOTP").style.visibility = "hidden";
+        document.querySelector("#giveOTP").style.visibility = "visible";
+
+        document.querySelector("#giveOTP").addEventListener("click", ()=>{
+
+            let otp = document.querySelector("input").value;
+            if(otp == "123456"){
+                // alert("success");
+                modal_container.classList.remove("show")
+                document.querySelector("#myBtn").textContent = mobNo;
+                localStorage.setItem("login", true);
+
+
+                open.addEventListener("click", ()=>{
+                    modal_container.classList.remove("show")
+                    window.location.href = "login_profile.html";
+                    login()
+
+                })
+
+
+            }
+            else{
+                alert("Wrong OTP");
+                document.querySelector("#entermobile").textContent = `Enter Your mobile number`;
+                document.querySelector("#rem1").style.visibility = "visible";
+                document.querySelector("#rem2").style.visibility = "visible";
+                document.querySelector("#countryDrop").style.visibility = "visible";
+                document.querySelector("#input").value = null;
+                document.querySelector("#input").placeholder = "Enter Mobile Number"
+                document.querySelector("#sendOTP").style.visibility = "visible";
+                document.querySelector("#giveOTP").style.visibility = "hidden";
+
+            }
+
+        })
+       
+    }
+})
 
 </script>
 
